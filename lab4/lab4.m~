@@ -1,4 +1,4 @@
-N = 8;
+N  = 4;
 Nx = N;
 Ny = N;
 Nz = N;
@@ -72,8 +72,9 @@ ylabel('Z')
 
 figure
 plot(f_exact(:,Nx/2,Nz/2))
-leg_str = 'exact solution'
-legend(leg_str)
+legend_strings = ["exact solution"];
+legend(legend_strings);
+%legend;
 hold on;
 
 %вычисления по формуле (2) из описания лабораторной работы
@@ -87,7 +88,7 @@ while residual > eps
     for i=2:Nx-1
       for j = 2:Ny-1
         for k = 2:Nz-1
-            f1(i,j,k) = -1/(2/hx^2+2/hy^2+2/hz^2)*(...
+            f1(i,j,k) = 1/(2/hx^2+2/hy^2+2/hz^2)*(...
                            (f(i+1,j,k)+f(i-1,j,k))/hx^2 + ...
                            (f(i,j-1,k)+f(i,j+1,k))/hy^2+...
                            (f(i,j,k-1)+f(i-1,j,k+1))/hz^2 - 6);
@@ -109,13 +110,21 @@ while residual > eps
     end
     
     plot(f(:,Nx/2,Nz/2))
-    leg_str = strcat(leg_str,'\n iter '),
-    legend(strcat('iter ',num2str(n)))
+    str = sprintf('iter %d',n);
+    legend_strings(end+1) = str;
+    %leg_str = strcat(leg_str,num2str(n));
+    legend(legend_strings);
     hold on;
     
     
     n = n+1;
-    f = f1;
+    for i=2:Nx-1
+      for j = 2:Ny-1
+        for k = 2:Nz-1
+            f(i,j,k) = f1(i,j,k)
+        end
+      end
+    end
     n,residual
 end
   disp("convergence reached!!!!")
